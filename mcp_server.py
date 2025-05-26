@@ -1,21 +1,17 @@
 import sys
 import asyncio
+import json
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-from autogen_agentchat.agents import AssistantAgent, BaseChatAgent
-from autogen_agentchat.messages import TextMessage, StopMessage
-from autogen_agentchat.teams import RoundRobinGroupChat
-from autogen_agentchat.ui import Console
-from autogen_agentchat.conditions import TextMessageTermination, MaxMessageTermination, ExternalTermination
-from autogen_agentchat.base import Response
 
+from autogen_agentchat.agents import AssistantAgent
+from autogen_agentchat.messages import TextMessage
 from autogen_ext.models.ollama import OllamaChatCompletionClient
 
-from autogen_core.code_executor import CodeBlock
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("Python-code-runner")
+mcp = FastMCP("Python-code-runner", port=7000) 
 
 ollama_model_client = OllamaChatCompletionClient(model="llama3.1:8b")
 
@@ -66,5 +62,6 @@ async def generate_code_from_steps(steps: str) -> str:
     result = await code_generator.on_messages(messages=[code_message], cancellation_token=None)
     return result.chat_message.content
 
+
 if __name__=="__main__":
-    mcp.run()
+    mcp.run(transport="sse")
