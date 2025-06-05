@@ -1,0 +1,7 @@
+# pip packages
+autogen_agentchat
+autogen_core
+"autogen-ext[mcp]"
+"autogen-ext[openai]"
+"autogen-ext[ollama]"
+"mcp[cli]"
